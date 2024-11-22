@@ -21,4 +21,6 @@ from app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user_ser',views.user_def_serializer),
+    path('fun1',views.fun1),
+
 ]
