@@ -92,6 +92,46 @@ def fun6(req,d):
     elif req.method=='DELETE':
         demo.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class fun7(APIView):
+    def get(self,req):
+        demo=student.objects.all()
+        s=model_serializer(demo,many=True)
+        return Response(s.data)
+    def post(self,req):
+        s=model_serializer(data=req.data)
+        if s.is_valid():
+            s.save()
+            return JsonResponse(s.data,status=status.HTTP_201_CREATED)
+        else:
+            return JsonResponse(s.errors,status=status.HTTP_400_BAD_REQUEST)
+        
+class fun8(APIView):
+    def get(self,req,d):
+        try:
+            demo=student.objects.get(pk=d)
+            s=model_serializer(demo)
+            return Response(s.data)
+        except student.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+    def put(self,req,d):
+        try:
+            demo=student.objects.get(pk=d)
+            s=model_serializer(demo,data=req.data)
+            if s.is_valid():
+                s.save()
+                return Response(s.data)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        except student.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+    def delete(self,req,d):
+        try:
+            demo=student.objects.get(pk=d)
+            demo.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except student.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
     
 
 class genericapiview(generics.GenericAPIView,mixins.ListModelMixin,mixins.CreateModelMixin):
